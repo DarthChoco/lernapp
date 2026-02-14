@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LernLeseApp</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 20px; background: #f0f4f8; }
+        .letter-btn { padding: 10px; margin: 5px; cursor: pointer; border: 2px solid #ccc; border-radius: 5px; background: white; }
+        .letter-btn.active { background: #4CAF50; color: white; border-color: #388E3C; }
+        .word-display { font-size: 3rem; font-weight: bold; margin-top: 30px; letter-spacing: 2px; }
+        .s1 { color: red; }
+        .s2 { color: blue; }
+        .controls { margin-top: 20px; }
+        button.nav { font-size: 1.2rem; padding: 10px 20px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <h1>LernLeseApp</h1>
+    <p>Klicke die gelernten Buchstaben an:</p>
+    <div id="alphabet"></div>
+
+    <div class="word-display" id="wordContainer">Wähle Buchstaben aus!</div>
+
+    <div class="controls">
+        <button class="nav" onclick="nextWord()">Nächstes Wort</button>
+    </div>
+
+    <script>
+        const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+        const words = ["MA-MA", "PA-PA", "O-MA", "O-PA", "AM-PEL", "NA-SE", "LAM-PE", "RE-GEN", "SA-LAT"];
+        let activeLetters = new Set();
+        let currentWordIndex = 0;
+
+        // Alphabet-Buttons erstellen
+        const alphaDiv = document.getElementById('alphabet');
+        alphabet.forEach(l => {
+            let btn = document.createElement('button');
+            btn.innerText = l;
+            btn.className = 'letter-btn';
+            btn.onclick = () => toggleLetter(l, btn);
+            alphaDiv.appendChild(btn);
+        });
+
+        function toggleLetter(l, btn) {
+            if (activeLetters.has(l)) activeLetters.delete(l);
+            else activeLetters.add(l);
+            btn.classList.toggle('active');
+            updateWord();
+        }
+
+        function isWordPossible(word) {
+            let clean = word.replace(/-/g, "").toUpperCase();
+            return [...clean].every(char => activeLetters.has(char));
+        }
+
+        function updateWord() {
+            const possibleWords = words.filter(isWordPossible);
+            const container = document.getElementById('wordContainer');
+            
+            if (possibleWords.length === 0) {
+                container.innerHTML = "Keine passenden Wörter";
+                return;
+            }
+
+            let word = possibleWords[currentWordIndex % possibleWords.length];
+            let syllables = word.split("-");
+            container.innerHTML = "";
+            
+            syllables.forEach((s, i) => {
+                let span = document.createElement('span');
+                span.innerText = s;
+                span.className = (i % 2 === 0) ? 's1' : 's2';
+                container.appendChild(span);
+            });
+        }
+
+        function nextWord() {
+            currentWordIndex++;
+            updateWord();
+        }
+    </script>
+</body>
+</html>
