@@ -3,83 +3,199 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LernLeseApp</title>
+    <title>LernLese-App</title>
     <style>
-        body { font-family: sans-serif; text-align: center; padding: 20px; background: #f0f4f8; }
-        .letter-btn { padding: 10px; margin: 5px; cursor: pointer; border: 2px solid #ccc; border-radius: 5px; background: white; }
-        .letter-btn.active { background: #4CAF50; color: white; border-color: #388E3C; }
-        .word-display { font-size: 3rem; font-weight: bold; margin-top: 30px; letter-spacing: 2px; }
-        .s1 { color: red; }
-        .s2 { color: blue; }
-        .controls { margin-top: 20px; }
-        button.nav { font-size: 1.2rem; padding: 10px 20px; cursor: pointer; }
+        :root {
+            --primary-bg: #f8fbff;
+            --accent-color: #4caf50;
+            --syllable-1: #e53935; /* Rot */
+            --syllable-2: #1e88e5; /* Blau */
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--primary-bg);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 { color: #333; margin-bottom: 10px; }
+        p { color: #666; margin-bottom: 20px; }
+
+        /* Alphabet-Grid */
+        .letter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(45px, 1fr));
+            gap: 8px;
+            width: 100%;
+            max-width: 600px;
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .letter-btn {
+            aspect-ratio: 1;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            background: #fff;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .letter-btn.active {
+            background-color: var(--accent-color);
+            color: white;
+            border-color: #388e3c;
+            transform: translateY(-2px);
+        }
+
+        /* Wortanzeige */
+        .word-display {
+            font-size: clamp(3rem, 10vw, 5rem);
+            font-weight: 800;
+            margin: 50px 0;
+            min-height: 1.2em;
+            letter-spacing: 2px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .s-red { color: var(--syllable-1); }
+        .s-blue { color: var(--syllable-2); }
+
+        /* Navigation */
+        .controls {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .main-btn {
+            padding: 15px 40px;
+            font-size: 1.3rem;
+            border-radius: 50px;
+            border: none;
+            background: #ff9800;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
+            transition: transform 0.2s;
+        }
+
+        .main-btn:active { transform: scale(0.95); }
+        .main-btn:disabled { background: #ccc; cursor: not-allowed; box-shadow: none; }
+
+        .stats { font-size: 0.9rem; color: #888; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-    <h1>LernLeseApp</h1>
-    <p>Klicke die gelernten Buchstaben an:</p>
-    <div id="alphabet"></div>
+    <h1>Lese-Profi</h1>
+    <p>Welche Buchstaben kannst du schon?</p>
+    
+    <div id="alphabet" class="letter-grid"></div>
 
-    <div class="word-display" id="wordContainer">Wähle Buchstaben aus!</div>
-
-    <div class="controls">
-        <button class="nav" onclick="nextWord()">Nächstes Wort</button>
+    <div class="word-display" id="wordContainer">
+        <span style="color: #ccc; font-size: 1.5rem;">Wähle Buchstaben aus...</span>
     </div>
 
+    <div class="controls">
+        <button id="nextBtn" class="main-btn" onclick="renderNextWord()" disabled>Nächstes Wort</button>
+    </div>
+
+    <div class="stats" id="statsInfo">0 Wörter verfügbar</div>
+
     <script>
-        const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-        const words = ["MA-MA", "PA-PA", "O-MA", "O-PA", "AM-PEL", "NA-SE", "LAM-PE", "RE-GEN", "SA-LAT"];
-        let activeLetters = new Set();
-        let currentWordIndex = 0;
+        let dictionary = [];
+        let learnedLetters = new Set();
+        let currentIndex = 0;
+        let filteredWords = [];
 
-        // Alphabet-Buttons erstellen
-        const alphaDiv = document.getElementById('alphabet');
-        alphabet.forEach(l => {
-            let btn = document.createElement('button');
-            btn.innerText = l;
-            btn.className = 'letter-btn';
-            btn.onclick = () => toggleLetter(l, btn);
-            alphaDiv.appendChild(btn);
-        });
-
-        function toggleLetter(l, btn) {
-            if (activeLetters.has(l)) activeLetters.delete(l);
-            else activeLetters.add(l);
-            btn.classList.toggle('active');
-            updateWord();
+        // 1. Wörter laden (von deutscheworte.txt)
+        async function initApp() {
+            try {
+                const response = await fetch('deutscheworte.txt');
+                if (!response.ok) throw new Error("deutscheworte nicht gefunden");
+                const text = await response.ok ? await response.text() : "";
+                dictionary = text.split('\n')
+                                 .map(w => w.trim())
+                                 .filter(w => w.length > 1);
+                console.log("Wörterbuch geladen:", dictionary.length);
+            } catch (err) {
+                console.warn("deutscheworte konnte nicht geladen werden. Nutze Beispielwörter.");
+                dictionary = ["Mama", "Papa", "Oma", "Opa", "Nase", "Lampe", "Sonne", "Auto", "Esel"];
+            }
+            createAlphabet();
         }
 
-        function isWordPossible(word) {
-            let clean = word.replace(/-/g, "").toUpperCase();
-            return [...clean].every(char => activeLetters.has(char));
-        }
-
-        function updateWord() {
-            const possibleWords = words.filter(isWordPossible);
-            const container = document.getElementById('wordContainer');
+        // 2. Alphabet-Interface bauen
+        function createAlphabet() {
+            const container = document.getElementById('alphabet');
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜẞ".split("");
             
-            if (possibleWords.length === 0) {
-                container.innerHTML = "Keine passenden Wörter";
+            chars.forEach(char => {
+                const btn = document.createElement('button');
+                btn.className = 'letter-btn';
+                btn.innerText = char;
+                btn.onclick = () => {
+                    btn.classList.toggle('active');
+                    const lowerChar = char.toLowerCase();
+                    if(learnedLetters.has(lowerChar)) learnedLetters.delete(lowerChar);
+                    else learnedLetters.add(lowerChar);
+                    updateWordPool();
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        // 3. Pool der möglichen Wörter aktualisieren
+        function updateWordPool() {
+            filteredWords = dictionary.filter(word => {
+                const cleanWord = word.toLowerCase().replace(/[^a-zäöüß]/g, '');
+                return [...cleanWord].every(c => learnedLetters.has(c));
+            });
+
+            document.getElementById('statsInfo').innerText = `${filteredWords.length} Wörter gefunden`;
+            document.getElementById('nextBtn').disabled = filteredWords.length === 0;
+            
+            currentIndex = 0;
+            renderNextWord();
+        }
+
+        // 4. Silbentrennung & Anzeige
+        function renderNextWord() {
+            const container = document.getElementById('wordContainer');
+            if (filteredWords.length === 0) {
+                container.innerHTML = '<span style="color: #ccc; font-size: 1.5rem;">Wähle mehr Buchstaben!</span>';
                 return;
             }
 
-            let word = possibleWords[currentWordIndex % possibleWords.length];
-            let syllables = word.split("-");
+            const word = filteredWords[currentIndex % filteredWords.length];
+            currentIndex++;
+
+            // Einfache deutsche Silbenlogik (Trennung nach Vokalen)
+            // Regex: Findet Gruppen von (Konsonanten + Vokale)
+            const syllableRegex = /[^aeiouäöü]*[aeiouäöü]+(?:[^aeiouäöü](?![aeiouäöü]))*/gi;
+            const syllables = word.match(syllableRegex) || [word];
+
             container.innerHTML = "";
-            
             syllables.forEach((s, i) => {
-                let span = document.createElement('span');
+                const span = document.createElement('span');
                 span.innerText = s;
-                span.className = (i % 2 === 0) ? 's1' : 's2';
+                span.className = (i % 2 === 0) ? 's-red' : 's-blue';
                 container.appendChild(span);
             });
         }
 
-        function nextWord() {
-            currentWordIndex++;
-            updateWord();
-        }
+        // Start
+        initApp();
     </script>
 </body>
 </html>
