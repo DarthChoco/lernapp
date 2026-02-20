@@ -36,6 +36,7 @@
                     <button class="side-btn grade-1-only" onclick="showMathGame('mengen')">🔢 Mengen</button>
                     <button class="side-btn grade-1-only" onclick="showMathGame('vergleich')">⚖️ Vergleich</button>
                     <button class="side-btn" onclick="showMathGame('rechnen')">➕ Rechnen</button>
+                    <button class="side-btn grade-1-only" onclick="showGame('zahlenmauer')">🧱 Zahlenmauer</button>
                 </div>
 
                 <div class="nav-section">
@@ -64,6 +65,15 @@
                 <div id="math-options" class="alphabet"></div>
             </div>
 
+            <div id="game-zahlenmauer" class="game-screen" style="display:none;">
+                <div id="zahlenmauer-container"></div>
+                <div class="controls" style="margin-top:20px;">
+                    <button class="main-btn" onclick="checkZahlenmauer()">✔ Prüfen</button>
+                    <button class="main-btn" style="background:#78909C; box-shadow:0 5px 0 #546E7A;" onclick="generateZahlenmauer()">Neu</button>
+                </div>
+                <div id="zahlenmauer-feedback"></div>
+            </div>
+
             <div id="game-settings" class="game-screen" style="display:none;">
                 <h3>Gelernt Buchstaben</h3>
                 <div id="alphabet-selection-grid" class="alphabet-grid"></div>
@@ -77,6 +87,15 @@
             </div>
         </main>
     </div>
+    <!-- Feedback Toast -->
+    <div id="feedback-toast" class="feedback-toast"></div>
+
+    <!-- Meilenstein-Overlay -->
+    <div id="milestone-overlay" class="milestone-overlay" style="display:none;">
+        <canvas id="firework-canvas"></canvas>
+        <div id="milestone-content"></div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
