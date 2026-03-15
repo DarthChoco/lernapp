@@ -56,6 +56,7 @@ function showGame(gameId) {
     if (gameId === 'silben') renderRandomWord();
     if (gameId === 'anlaut') nextAnlautTask();
     if (gameId === 'zahlenmauer') generateZahlenmauer();
+    if (gameId === 'buchstaben-auswahl') baueBuchstabenAuswahl();
 }
 
 function showMathGame(mode) {
@@ -583,6 +584,20 @@ function startFirework(canvas) {
         animFrame = requestAnimationFrame(draw);
     }
     draw();
+}
+
+// --- BUCHSTABEN-AUSWAHL ---
+function baueBuchstabenAuswahl() {
+    const grid = document.getElementById('buchstaben-auswahl-grid');
+    if (!grid) return;
+    grid.innerHTML = '';
+    Object.keys(BUCHSTABEN_DATA).forEach(buchstabe => {
+        const btn = document.createElement('button');
+        btn.className = 'letter-btn';
+        btn.textContent = buchstabe;
+        btn.onclick = () => startBuchstabenLernen(buchstabe);
+        grid.appendChild(btn);
+    });
 }
 
 // --- MOBILE NAV ---

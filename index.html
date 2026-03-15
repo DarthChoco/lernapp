@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>SchlauFix Dashboard</title>
+    <link rel="stylesheet" media="screen" href="https://fontlibrary.org/de/face/fibel-nord" type="text/css"/>
     <link rel="stylesheet" href="style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 </head>
@@ -29,6 +30,7 @@
                     <h4>Deutsch</h4>
                     <button class="side-btn grade-1-only" onclick="showGame('silben')">📖 Silben</button>
                     <button class="side-btn grade-1-only" onclick="showGame('anlaut')">🍎 Anlaute</button>
+                    <button class="side-btn grade-1-only" onclick="showGame('buchstaben-auswahl')">🔤 ABC Lernen</button>
                 </div>
 
                 <div class="nav-section">
@@ -52,6 +54,7 @@
             <div class="mobile-popup" id="popup-deutsch">
                 <button class="mobile-popup-btn grade-1-only" onclick="mobileNav('silben')">📖 Silben</button>
                 <button class="mobile-popup-btn grade-1-only" onclick="mobileNav('anlaut')">🍎 Anlaute</button>
+                <button class="mobile-popup-btn grade-1-only" onclick="mobileNav('buchstaben-auswahl')">🔤 ABC Lernen</button>
             </div>
             <div class="mobile-popup" id="popup-mathe">
                 <button class="mobile-popup-btn grade-1-only" onclick="mobileNavMath('mengen')">🔢 Mengen</button>
@@ -111,6 +114,15 @@
                 <div id="zahlenmauer-feedback"></div>
             </div>
 
+            <!-- Buchstaben-Auswahl -->
+            <div id="game-buchstaben-auswahl" class="game-screen" style="display:none;">
+                <h3 style="text-align:center;margin-top:0;">🔤 Welchen Buchstaben möchtest du lernen?</h3>
+                <div id="buchstaben-auswahl-grid" class="bl-auswahl-grid"></div>
+            </div>
+
+            <!-- Buchstaben-Lernmodul (wird dynamisch befüllt) -->
+            <div id="game-buchstaben" class="game-screen" style="display:none;"></div>
+
             <div id="game-settings" class="game-screen" style="display:none;">
                 <h3>Gelernte Buchstaben</h3>
                 <div id="alphabet-selection-grid" class="alphabet-grid"></div>
@@ -121,7 +133,6 @@
                     <button class="range-btn" onclick="setMathRange(20)">bis 20</button>
                     <button class="range-btn" onclick="setMathRange(100)">bis 100</button>
                 </div>
-
             </div>
         </main>
     </div>
@@ -135,5 +146,6 @@
     </div>
 
     <script src="script.js"></script>
+    <script src="buchstaben.js"></script>
 </body>
 </html>

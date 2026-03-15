@@ -24,7 +24,7 @@ html, body {
     padding: 0;
     height: 100dvh;
     overflow: hidden;
-    font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+    font-family: 'FibelNordRegular', 'Segoe UI', Roboto, Arial, sans-serif;
     background-color: var(--bg);
 }
 
@@ -766,4 +766,285 @@ html, body {
     .mobile-tabs { height: 56px; }
     .mobile-tab-icon { font-size: 1.5rem; }
     .mobile-popup-btn { font-size: 0.9rem; padding: 12px 8px; }
+}
+
+/* =============================================
+   BUCHSTABEN-LERNMODUL
+   ============================================= */
+
+/* Buchstaben-Auswahl Grid */
+.bl-auswahl-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 12px;
+    margin-top: 8px;
+}
+
+/* Header: Badge + Fortschrittsbalken */
+.bl-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.bl-badge {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--primary);
+    background: #fff3e0;
+    border: 3px solid var(--primary);
+    border-radius: 14px;
+    padding: 4px 16px;
+    flex-shrink: 0;
+}
+
+.bl-progress {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.bl-progress-dot {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #eee;
+    border: 3px solid #ddd;
+    transition: background 0.3s;
+}
+
+.bl-progress-dot.done {
+    background: var(--success);
+    border-color: #388E3C;
+}
+
+.bl-progress-dot.active {
+    background: var(--primary);
+    border-color: #d84315;
+    transform: scale(1.2);
+}
+
+/* Aufgaben-Box */
+.bl-aufgabe {
+    background: #e3f2fd;
+    border-left: 5px solid var(--secondary);
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: clamp(0.9rem, 2.5vw, 1.05rem);
+    font-weight: 600;
+    color: #1565c0;
+}
+
+.bl-help-btn {
+    flex-shrink: 0;
+    background: var(--secondary);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 0 #1565c0;
+}
+
+
+
+
+
+
+
+
+
+
+/* Buchstabe im Wort erkennen */
+.bl-wort-display {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    font-size: clamp(2rem, 8vw, 3.5rem);
+    font-weight: 900;
+    margin: 12px 0;
+    min-height: 70px;
+    align-items: center;
+}
+
+.bl-buchstabe-btn {
+    cursor: pointer;
+    padding: 4px 2px;
+    border-radius: 8px;
+    transition: background 0.1s, transform 0.1s;
+    user-select: none;
+    -webkit-user-select: none;
+    border: 3px solid transparent;
+}
+
+.bl-buchstabe-btn:hover { background: #fff3e0; }
+.bl-buchstabe-treffer  { color: var(--success); border-color: var(--success); background: #e8f5e9 !important; }
+.bl-buchstabe-falsch   { animation: shake 0.3s; color: var(--danger); }
+
+.bl-erkennen-fortschritt {
+    text-align: center;
+    color: #888;
+    font-size: 0.9rem;
+    margin-top: 8px;
+}
+
+/* Wimmelbild */
+.bl-wimmelbild {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
+    gap: 6px;
+    margin: 10px 0;
+    max-height: 280px;
+    overflow-y: auto;
+}
+
+.bl-wimmel-btn {
+    height: 48px;
+    font-size: 1.3rem;
+    font-weight: 800;
+    border: 2px solid #eee;
+    border-radius: 10px;
+    background: white;
+    cursor: pointer;
+    transition: 0.1s;
+}
+
+.bl-wimmel-btn:active { transform: scale(0.9); }
+.bl-wimmel-treffer    { background: var(--success) !important; color: white !important; border-color: #388E3C !important; }
+.bl-wimmel-falsch     { animation: shake 0.3s; background: #ffebee !important; }
+
+.bl-wimmelbild-zaehler {
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--primary);
+    margin: 6px 0;
+}
+
+/* Bilderrätsel */
+.bl-bilder-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin: 10px 0;
+}
+
+.bl-bild-karte {
+    border: 3px solid #eee;
+    border-radius: 20px;
+    padding: 16px 10px 12px;
+    text-align: center;
+    cursor: pointer;
+    background: white;
+    box-shadow: 0 5px 0 #eee;
+    transition: transform 0.1s;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.bl-bild-karte:active { transform: translateY(4px); box-shadow: 0 1px 0 #eee; }
+.bl-bild-richtig { background: #e8f5e9 !important; border-color: var(--success) !important; box-shadow: 0 5px 0 #a5d6a7 !important; }
+.bl-bild-falsch  { background: #ffebee !important; border-color: var(--danger) !important; }
+
+.bl-bild-emoji { font-size: clamp(2.5rem, 10vw, 3.5rem); line-height: 1; }
+.bl-bild-label { font-size: 0.9rem; font-weight: 700; margin-top: 6px; color: #444; }
+
+/* Anlautposition */
+.bl-position-emoji {
+    font-size: clamp(3rem, 14vw, 5rem);
+    text-align: center;
+    margin: 10px 0 4px;
+    line-height: 1;
+}
+
+.bl-position-btns {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin: 14px 0;
+    flex-wrap: wrap;
+}
+
+.bl-position-btn {
+    flex: 1;
+    min-width: 90px;
+    padding: 14px 10px;
+    font-size: clamp(0.9rem, 3vw, 1.1rem);
+    font-weight: 800;
+    border: 3px solid #eee;
+    border-radius: 18px;
+    background: white;
+    box-shadow: 0 5px 0 #eee;
+    cursor: pointer;
+    transition: 0.1s;
+}
+
+.bl-position-btn:active { transform: translateY(4px); box-shadow: 0 1px 0 #eee; }
+.bl-pos-richtig { background: var(--success) !important; color: white !important; border-color: #388E3C !important; }
+.bl-pos-falsch  { animation: shake 0.3s; background: #ffebee !important; }
+
+/* Silbenklatschen */
+.bl-klatsch-btn {
+    display: block;
+    margin: 10px auto;
+    padding: 18px 36px;
+    font-size: clamp(1.3rem, 5vw, 1.8rem);
+    font-weight: 900;
+    background: #FFF9C4;
+    border: 3px solid #F9A825;
+    border-radius: 20px;
+    box-shadow: 0 6px 0 #F9A825;
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.1s;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.bl-klatsch-aktiv {
+    transform: scale(1.12) translateY(4px) !important;
+    box-shadow: 0 2px 0 #F9A825 !important;
+}
+
+.bl-silben-zaehler {
+    text-align: center;
+    font-size: 1.8rem;
+    min-height: 40px;
+    letter-spacing: 4px;
+    margin: 4px 0;
+}
+
+.bl-silben-zahlen {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.bl-silben-zahlen .letter-btn {
+    width: clamp(52px, 14vw, 68px);
+    height: clamp(52px, 14vw, 68px);
+    flex: none;
+}
+
+/* Mobile Anpassungen */
+@media (max-width: 480px) {
+    .bl-bilder-grid { gap: 10px; }
+    .bl-bild-karte  { padding: 12px 8px 10px; border-radius: 16px; }
+    .bl-wimmel-btn  { height: 42px; font-size: 1.1rem; }
+    .bl-wimmelbild  { max-height: 220px; }
+    .bl-position-btn { padding: 12px 8px; }
 }
