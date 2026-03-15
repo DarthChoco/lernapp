@@ -17,6 +17,7 @@
 * {
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
+    font-family: 'FibelNordRegular', 'Segoe UI', Roboto, Arial, sans-serif;
 }
 
 html, body {
